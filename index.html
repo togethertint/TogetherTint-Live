@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TogetherTint - Platform for Artists</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--primary:#7C3AED;--secondary:#06B6D4;--accent:#F59E0B;--pink:#EC4899;--green:#10B981;--dark:#0F172A;--darker:#020617;--light:#F8FAFC}
+        body{font-family:'Poppins',sans-serif;background:var(--darker);color:var(--light);overflow-x:hidden}
+        .gradient-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background:linear-gradient(135deg,var(--darker) 0%,#1E1B4B 50%,var(--darker) 100%)}
+        .gradient-bg::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 20% 80%,rgba(124,58,237,0.15) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(6,182,212,0.15) 0%,transparent 50%),radial-gradient(circle at 40% 40%,rgba(236,72,153,0.1) 0%,transparent 40%);animation:gradientMove 15s ease infinite}
+        @keyframes gradientMove{0%,100%{transform:translate(0,0)}50%{transform:translate(-20px,20px)}}
+        .orb{position:fixed;border-radius:50%;filter:blur(80px);z-index:-1;animation:float 20s ease-in-out infinite}
+        .orb-1{width:400px;height:400px;background:var(--primary);top:10%;left:10%;opacity:0.3}
+        .orb-2{width:300px;height:300px;background:var(--secondary);bottom:20%;right:10%;opacity:0.25;animation-delay:-5s}
+        .orb-3{width:250px;height:250px;background:var(--pink);top:50%;right:30%;opacity:0.2;animation-delay:-10s}
+        @keyframes float{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+        header{position:fixed;top:0;width:100%;padding:20px 5%;display:flex;justify-content:space-between;align-items:center;z-index:1000;background:rgba(2,6,23,0.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.1)}
+        .logo{font-size:clamp(24px,4vw,32px);font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        nav ul{display:flex;gap:clamp(20px,3vw,40px);list-style:none}
+        nav a{color:var(--light);text-decoration:none;font-weight:500;font-size:clamp(12px,1.5vw,14px);letter-spacing:0.5px;transition:0.3s;position:relative}
+        nav a:hover{color:var(--secondary)}
+        nav a::after{content:'';position:absolute;bottom:-5px;left:0;width:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--secondary));transition:0.3s}
+        nav a:hover::after{width:100%}
+        .social-icons{display:flex;gap:clamp(10px,2vw,15px)}
+        .social-icons a{width:clamp(38px,5vw,45px);height:clamp(38px,5vw,45px);border-radius:12px;display:flex;align-items:center;justify-content:center;color:var(--light);font-size:clamp(16px,2vw,18px);transition:0.4s;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);position:relative;overflow:hidden}
+        .social-icons a::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,var(--primary),var(--pink));opacity:0;transition:0.4s;z-index:-1}
+        .social-icons a:hover{transform:translateY(-5px) scale(1.1);border-color:transparent;box-shadow:0 10px 30px rgba(124,58,237,0.4)}
+        .social-icons a:hover::before{opacity:1}
+        .menu-toggle{display:none;flex-direction:column;gap:6px;cursor:pointer;z-index:1001}
+        .menu-toggle span{width:28px;height:3px;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:3px;transition:0.3s}
+        .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 5% 80px;position:relative}
+        .hero-content{position:relative;z-index:1;max-width:800px}
+        .hero-badge{display:inline-block;padding:10px 25px;background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(6,182,212,0.2));border:1px solid rgba(124,58,237,0.3);border-radius:50px;font-size:clamp(11px,1.5vw,13px);font-weight:500;color:var(--secondary);margin-bottom:30px;letter-spacing:1px}
+        .hero-content h1{font-size:clamp(2.5rem,7vw,5rem);font-weight:800;line-height:1.1;margin-bottom:25px;background:linear-gradient(135deg,#fff 0%,#fff 50%,var(--secondary) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero-content h1 span{background:linear-gradient(135deg,var(--primary),var(--pink),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero-content p{font-size:clamp(1rem,2vw,1.2rem);color:rgba(248,250,252,0.7);margin:0 auto 40px;line-height:1.8;font-weight:300}
+        .cta-btn{padding:clamp(16px,2vw,20px) clamp(35px,5vw,50px);font-size:clamp(13px,1.5vw,15px);font-weight:600;letter-spacing:1px;border:none;border-radius:50px;background:linear-gradient(135deg,var(--primary),var(--pink));color:white;cursor:pointer;transition:0.4s;text-decoration:none;display:inline-block;font-family:'Poppins',sans-serif;box-shadow:0 10px 40px rgba(124,58,237,0.4)}
+        .cta-btn:hover{transform:translateY(-5px) scale(1.05);box-shadow:0 20px 50px rgba(124,58,237,0.5)}
+        .section{padding:clamp(80px,12vw,140px) 5%;position:relative}
+        .section-header{text-align:center;margin-bottom:clamp(50px,8vw,80px)}
+        .section-badge{display:inline-block;padding:8px 20px;background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(236,72,153,0.15));border-radius:50px;font-size:clamp(10px,1.2vw,12px);font-weight:600;color:var(--pink);margin-bottom:20px;letter-spacing:2px;text-transform:uppercase}
+        .section-title{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;background:linear-gradient(135deg,#fff,rgba(255,255,255,0.8));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .about-content{max-width:900px;margin:0 auto;text-align:center;padding:clamp(30px,5vw,50px);background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:30px;backdrop-filter:blur(10px);position:relative;overflow:hidden}
+        .about-content::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--primary),var(--secondary),transparent)}
+        .about-content p{color:rgba(248,250,252,0.8);font-size:clamp(1rem,2vw,1.15rem);line-height:2;font-weight:300}
+        .about-content strong{color:var(--secondary);font-weight:600}
+        .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,35px);max-width:1200px;margin:0 auto}
+        .team-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:24px;overflow:hidden;transition:0.5s;position:relative}
+        .team-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,rgba(124,58,237,0.1),rgba(6,182,212,0.1));opacity:0;transition:0.5s;z-index:0}
+        .team-card:hover{transform:translateY(-15px) scale(1.02);border-color:rgba(124,58,237,0.3);box-shadow:0 30px 60px rgba(124,58,237,0.2)}
+        .team-card:hover::before{opacity:1}
+        .team-img-container{width:100%;height:clamp(280px,35vw,350px);overflow:hidden;position:relative}
+        .team-img-container::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(2,6,23,0.8),transparent)}
+        .team-img{width:100%;height:100%;object-fit:cover;object-position:top;transition:0.5s}
+        .team-card:hover .team-img{transform:scale(1.1)}
+        .team-info{padding:clamp(20px,3vw,30px);text-align:center;position:relative;z-index:1}
+        .team-info h3{font-size:clamp(1.2rem,2vw,1.5rem);font-weight:700;margin-bottom:8px;background:linear-gradient(135deg,#fff,var(--secondary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .team-info .role{display:inline-block;padding:6px 16px;background:linear-gradient(135deg,var(--primary),var(--pink));border-radius:20px;font-size:clamp(10px,1.2vw,11px);font-weight:600;color:white;letter-spacing:1px;text-transform:uppercase;margin-bottom:15px}
+        .team-info p{color:rgba(248,250,252,0.6);font-size:clamp(0.85rem,1.4vw,0.95rem);line-height:1.7;font-weight:300}
+        .events-container{max-width:900px;margin:0 auto}
+        .event-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:clamp(25px,4vw,35px);margin-bottom:20px;display:flex;align-items:center;gap:clamp(20px,4vw,30px);transition:0.4s;position:relative;overflow:hidden}
+        .event-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--primary),var(--secondary));opacity:0;transition:0.4s}
+        .event-card:hover{border-color:rgba(124,58,237,0.3);transform:translateX(10px);box-shadow:0 20px 40px rgba(124,58,237,0.15)}
+        .event-card:hover::before{opacity:1}
+        .event-icon{width:clamp(60px,10vw,80px);height:clamp(60px,10vw,80px);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:clamp(1.5rem,3vw,2rem);flex-shrink:0;background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(236,72,153,0.2));border:1px solid rgba(124,58,237,0.3)}
+        .event-details{flex:1}
+        .event-details h3{font-size:clamp(1.1rem,2vw,1.4rem);font-weight:600;margin-bottom:5px;color:var(--light)}
+        .event-details .date{font-size:clamp(12px,1.5vw,14px);font-weight:500;background:linear-gradient(90deg,var(--secondary),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .event-details p{color:rgba(248,250,252,0.6);margin-top:10px;font-size:clamp(0.85rem,1.4vw,0.95rem);font-weight:300}
+        .winner-badge{display:inline-block;padding:10px 20px;background:linear-gradient(135deg,var(--accent),#F97316);border-radius:12px;font-size:clamp(0.8rem,1.3vw,0.9rem);color:white;font-weight:600;margin-top:12px;box-shadow:0 10px 25px rgba(245,158,11,0.3)}
+        .status-badge{display:inline-block;padding:6px 14px;font-size:clamp(9px,1vw,10px);font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:8px;margin-bottom:10px}
+        .status-badge.completed{background:linear-gradient(135deg,rgba(16,185,129,0.2),rgba(16,185,129,0.1));color:var(--green);border:1px solid rgba(16,185,129,0.3)}
+        .status-badge.upcoming{background:linear-gradient(135deg,rgba(124,58,237,0.2),rgba(236,72,153,0.2));color:var(--pink);border:1px solid rgba(236,72,153,0.3)}
+        footer{padding:clamp(60px,10vw,100px) 5% clamp(30px,5vw,40px);text-align:center;position:relative}
+        footer::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(124,58,237,0.5),rgba(6,182,212,0.5),transparent)}
+        .footer-logo{font-size:clamp(2rem,5vw,3rem);font-weight:800;background:linear-gradient(135deg,var(--primary),var(--secondary),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:30px}
+        .footer-social{display:flex;justify-content:center;gap:clamp(15px,3vw,20px);margin-bottom:40px}
+        .footer-social a{width:clamp(50px,7vw,60px);height:clamp(50px,7vw,60px);border-radius:16px;display:flex;align-items:center;justify-content:center;color:var(--light);font-size:clamp(18px,2.5vw,22px);transition:0.4s;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);position:relative;overflow:hidden}
+        .footer-social a::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,var(--primary),var(--pink));opacity:0;transition:0.4s;z-index:-1}
+        .footer-social a:hover{transform:translateY(-8px) rotate(5deg);border-color:transparent;box-shadow:0 15px 35px rgba(124,58,237,0.4)}
+        .footer-social a:hover::before{opacity:1}
+        footer p{color:rgba(248,250,252,0.4);font-size:clamp(12px,1.5vw,14px)}
+        footer p span{color:var(--pink)}
+        @media(max-width:992px){.team-grid{grid-template-columns:repeat(2,1fr);max-width:700px}.team-grid .team-card:last-child{grid-column:span 2;max-width:350px;margin:0 auto}}
+        @media(max-width:768px){.menu-toggle{display:flex}.social-icons{display:none}nav{position:fixed;top:0;right:-100%;width:75%;height:100vh;background:rgba(2,6,23,0.98);backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;transition:0.4s;border-left:1px solid rgba(124,58,237,0.2)}nav.active{right:0}nav ul{flex-direction:column;text-align:center;gap:35px}nav a{font-size:18px}.team-grid{grid-template-columns:1fr;max-width:400px}.team-grid .team-card:last-child{grid-column:span 1;max-width:none}.event-card{flex-direction:column;text-align:center}}
+    </style>
+</head>
+<body>
+    <div class="gradient-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <header>
+        <div class="logo">TogetherTint</div>
+        <nav id="navbar">
+            <ul>
+                <li><a href="#home" onclick="closeMenu()">Home</a></li>
+                <li><a href="#about" onclick="closeMenu()">About</a></li>
+                <li><a href="#team" onclick="closeMenu()">Team</a></li>
+                <li><a href="#events" onclick="closeMenu()">Events</a></li>
+            </ul>
+        </nav>
+        <div class="social-icons">
+            <a href="https://instagram.com/together.tint" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com/@togethertint?si=c2-TW1JvW8z6ptzo" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="mailto:togethertint@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">🎨 Platform for Emerging Artists</div>
+            <h1>Welcome to <span>TogetherTint</span></h1>
+            <p>A vibrant community dedicated to nurturing emerging artists. Join passionate Drawing and Painting enthusiasts and grow your creative journey with us.</p>
+            <a href="https://instagram.com/together.tint" target="_blank" class="cta-btn">Join Our Community</a>
+        </div>
+    </section>
+    <section class="section" id="about">
+        <div class="section-header">
+            <div class="section-badge">Who We Are</div>
+            <h2 class="section-title">About Us</h2>
+        </div>
+        <div class="about-content">
+            <p>TogetherTint is an initiative by three friends who share a vision of creating a platform for emerging artists. We work with individuals who have a passion for Drawing and Painting and aspire to grow in this field.</p>
+            <br>
+            <p>We organize competitions among our community members where winners receive prize money. Our first event winner <strong>Ujjwal Goswami</strong> won a prize of <strong>₹1100/-</strong></p>
+        </div>
+    </section>
+    <section class="section" id="team">
+        <div class="section-header">
+            <div class="section-badge">The Founders</div>
+            <h2 class="section-title">Meet Our Team</h2>
+        </div>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-img-container">
+                    <img src="bhanu.jpg" alt="Bhanu Thakur" class="team-img">
+                </div>
+                <div class="team-info">
+                    <h3>Bhanu Thakur</h3>
+                    <p class="role">Managing Director</p>
+                    <p>The visionary leader who provides direction and guidance to the TogetherTint community.</p>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-img-container">
+                    <img src="ajay.jpg" alt="Ajay Kumar" class="team-img">
+                </div>
+                <div class="team-info">
+                    <h3>Ajay Kumar</h3>
+                    <p class="role">Event Manager</p>
+                    <p>The mastermind behind organizing all our competitions and events successfully.</p>
+                </div>
+            </div>
+            <div class="team-card">
+                <div class="team-img-container">
+                    <img src="sachin.jpg" alt="Sachin Chauhan" class="team-img">
+                </div>
+                <div class="team-info">
+                    <h3>Sachin Chauhan</h3>
+                    <p class="role">Community Manager</p>
+                    <p>Connecting with the community and supporting artists in their creative journey.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section" id="events">
+        <div class="section-header">
+            <div class="section-badge">What's Happening</div>
+            <h2 class="section-title">Our Events</h2>
+        </div>
+        <div class="events-container">
+            <div class="event-card">
+                <div class="event-icon">🎨</div>
+                <div class="event-details">
+                    <span class="status-badge completed">Completed</span>
+                    <h3>First Art Competition</h3>
+                    <p class="date">November 1 - November 16, 2025</p>
+                    <p>Our inaugural online art competition featuring talented artists from across the community.</p>
+                    <div class="winner-badge">🏆 Winner: Ujjwal Goswami - ₹1100/-</div>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-icon">🎄</div>
+                <div class="event-details">
+                    <span class="status-badge upcoming">Upcoming</span>
+                    <h3>Christmas Special</h3>
+                    <p class="date">Coming Soon</p>
+                    <p>Showcase your creativity with Christmas themed artwork!</p>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-icon">🔥</div>
+                <div class="event-details">
+                    <span class="status-badge upcoming">Upcoming</span>
+                    <h3>Lohri Special</h3>
+                    <p class="date">Coming Soon</p>
+                    <p>Celebrate the festival of Lohri through your art!</p>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-icon">🔱</div>
+                <div class="event-details">
+                    <span class="status-badge upcoming">Upcoming</span>
+                    <h3>Shivratri Special</h3>
+                    <p class="date">Coming Soon</p>
+                    <p>Pay tribute to Mahadev through your artistic expressions.</p>
+                </div>
+            </div>
+            <div class="event-card">
+                <div class="event-icon">🌈</div>
+                <div class="event-details">
+                    <span class="status-badge upcoming">Upcoming</span>
+                    <h3>Holi Special</h3>
+                    <p class="date">Coming Soon</p>
+                    <p>Bring the festival of colors alive with your colorful artworks!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="footer-logo">TogetherTint</div>
+        <div class="footer-social">
+            <a href="https://instagram.com/together.tint" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://youtube.com/@togethertint?si=c2-TW1JvW8z6ptzo" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="mailto:togethertint@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+        <p>© 2025 TogetherTint. Crafted with <span>♥</span> for Artists.</p>
+    </footer>
+    <script>
+        function toggleMenu(){document.getElementById('navbar').classList.toggle('active')}
+        function closeMenu(){document.getElementById('navbar').classList.remove('active')}
+    </script>
+</body>
+</html>
